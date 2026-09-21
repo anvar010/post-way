@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import { liveIcon, pinIcon, DEFAULT_CENTER } from "@/lib/mapIcons";
 
-export default function HomeMap({ position, pins, onPinClick, recenterToken }) {
+export default function HomeMap({ position, pins, onPinClick, recenterToken, pickToken, onPick }) {
   const elRef = useRef(null);
   const mapRef = useRef(null);
   const liveMarkerRef = useRef(null);
@@ -78,6 +78,14 @@ export default function HomeMap({ position, pins, onPinClick, recenterToken }) {
     if (!map || !position || !recenterToken) return;
     map.setView([position.lat, position.lng], 17, { animate: true });
   }, [recenterToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "Use this spot": report whatever point is under the crosshair.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !pickToken) return;
+    const c = map.getCenter();
+    onPick && onPick({ lat: c.lat, lng: c.lng });
+  }, [pickToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <div ref={elRef} className="map-canvas" role="img" aria-label="Map showing your current location and saved places" />;
 }

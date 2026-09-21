@@ -15,6 +15,7 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useReminders } from "@/hooks/useReminders";
 import { loadLocations, saveLocations, loadPrefs, savePrefs, isInstallDismissed, setInstallDismissed } from "@/lib/storage";
 import { uid } from "@/lib/format";
+import { reverseGeocode } from "@/lib/geocode";
 import { haversineMiles } from "@/lib/distance";
 import { buildDirectionsUrl } from "@/lib/directions";
 
@@ -26,6 +27,7 @@ export default function PostWayApp() {
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const [saveOpen, setSaveOpen] = useState(false);
+  const [customSpot, setCustomSpot] = useState(null); // { position, address } chosen on the map
   const [detailId, setDetailId] = useState(null);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(null);
@@ -179,7 +181,16 @@ export default function PostWayApp() {
     setInstallDismissed();
   }, []);
 
+  const handlePickSpot = useCallback((spot) => {
+    setCustomSpot({ position: spot, address: null });
+    setSaveOpen(true);
+    reverseGeocode(spot.lat, spot.lng).then((address) => {
+      setCustomSpot((cur) => (cur && cur.position === spot ? { ...cur, address } : cur));
+    });
+  }, []);
+
   const openSaveSheet = useCallback(() => {
+    setCustomSpot(null);
     if (!geo.position) {
       pendingSaveIntent.current = true;
       showToast("Waiting for your location…");
@@ -196,6 +207,7 @@ export default function PostWayApp() {
           pins={locationsWithDistance}
           onPinClick={(id) => setDetailId(id)}
           onSave={openSaveSheet}
+          onPickSpot={handlePickSpot}
           onRecenter={() => setRecenterToken((t) => t + 1)}
           recenterToken={recenterToken}
         />
@@ -246,12 +258,16 @@ export default function PostWayApp() {
 
       <SaveSheet
         open={saveOpen}
-        position={geo.position}
-        address={geo.address}
-        onClose={() => setSaveOpen(false)}
+        position={customSpot ? customSpot.position : geo.position}
+        address={customSpot ? customSpot.address : geo.address}
+        onClose={() => {
+          setSaveOpen(false);
+          setCustomSpot(null);
+        }}
         onSave={(entry) => {
           addLocation(entry);
           setSaveOpen(false);
+          setCustomSpot(null);
         }}
       />
 

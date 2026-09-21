@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { fmtCoord, relativeUpdated } from "@/lib/format";
 import { getCategory } from "@/lib/categories";
 
 const HomeMap = dynamic(() => import("./HomeMap"), { ssr: false });
 
-export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, recenterToken }) {
+export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, recenterToken, onPickSpot }) {
+  const [picking, setPicking] = useState(false);
+  const [pickToken, setPickToken] = useState(0);
   const mapPins = pins.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, color: getCategory(p.category).color }));
   const status = geo.status;
 
@@ -34,7 +37,25 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
       </header>
 
       <div className="map-wrap">
-        <HomeMap position={geo.position} pins={mapPins} onPinClick={onPinClick} recenterToken={recenterToken} />
+        <HomeMap
+          position={geo.position}
+          pins={mapPins}
+          onPinClick={onPinClick}
+          recenterToken={recenterToken}
+          pickToken={pickToken}
+          onPick={(spot) => {
+            setPicking(false);
+            onPickSpot(spot);
+          }}
+        />
+        {picking && (
+          <div className="map-pick-pin" aria-hidden="true">
+            <svg viewBox="0 0 30 38" width="34" height="43">
+              <path d="M15 0C7 0 1 6.2 1 13.8 1 24 15 38 15 38s14-14 14-24.2C29 6.2 23 0 15 0z" fill="#8E1F2B" />
+              <circle cx="15" cy="14" r="5.5" fill="#fff" />
+            </svg>
+          </div>
+        )}
         {status === "loading" && <div className="map-skeleton" />}
         <button className="map-fab" type="button" aria-label="Recenter map on my location" onClick={onRecenter}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -45,6 +66,24 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
         </button>
       </div>
 
+      {picking ? (
+        <div className="sheet-fixed">
+          <div className="location-card pick-hint">
+            <div className="lc-copy">
+              <p className="lc-title">Move the map to place the pin</p>
+              <p className="lc-sub">Zoom in for an exact spot, then tap Use this spot.</p>
+            </div>
+          </div>
+          <div className="pick-actions">
+            <button className="btn btn--outline" type="button" onClick={() => setPicking(false)}>
+              Cancel
+            </button>
+            <button className="btn btn--primary btn--pick" type="button" onClick={() => setPickToken((t) => t + 1)}>
+              Use this spot
+            </button>
+          </div>
+        </div>
+      ) : (
       <div className="sheet-fixed">
         <div className="location-card" data-state={status}>
           {status === "loading" && (
@@ -149,7 +188,16 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
           </svg>
           Save This Location
         </button>
+        <button className="btn btn--outline btn--custom" type="button" onClick={() => setPicking(true)}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none" />
+            <circle cx="12" cy="12" r="7.2" />
+            <path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5" />
+          </svg>
+          Pin a different spot
+        </button>
       </div>
+      )}
     </>
   );
 }

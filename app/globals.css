@@ -348,6 +348,19 @@ a:focus-visible {
 .btn--sm { padding: 9px 16px; font-size: 13.5px; border-radius: var(--radius-sm); }
 .btn--full { width: 100%; }
 .btn--half { flex: 1 1 0; }
+.btn--custom { width: 100%; padding: 12px 16px; font-size: 14px; gap: 8px; }
+.pick-actions { display: flex; gap: 10px; }
+.pick-actions .btn { flex: 1 1 0; padding: 15px 16px; font-size: 15px; }
+.pick-actions .btn--pick { flex: 2 1 0; }
+.pick-hint { min-height: 0; }
+/* Fixed crosshair pin: its tip sits exactly at the map centre. */
+.map-pick-pin {
+  position: absolute; left: 50%; top: 50%;
+  width: 34px; height: 43px;
+  transform: translate(-50%, -100%);
+  z-index: 4; pointer-events: none;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.3));
+}
 .btn--save { width: 100%; padding: 16px 20px; font-size: 16px; box-shadow: 0 6px 20px -6px rgba(142,31,43,0.4); }
 .btn-row { display: flex; gap: 10px; }
 
