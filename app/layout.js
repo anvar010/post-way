@@ -30,7 +30,7 @@ export const metadata = {
   applicationName: "Post-Way",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default",
     title: "Post-Way",
   },
   // Next only emits the unprefixed mobile-web-app-capable tag; iOS needs the
