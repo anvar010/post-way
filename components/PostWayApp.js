@@ -88,6 +88,30 @@ export default function PostWayApp() {
     }
   }, [geo.status]);
 
+  // Installed iOS apps can report a viewport shorter than the real screen
+  // (about the height of the top inset), which leaves a gap under the tab
+  // bar. When that happens, size the shell to the full screen instead.
+  useEffect(() => {
+    const standalone =
+      window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+    if (!standalone) return;
+    const root = document.documentElement;
+    const apply = () => {
+      const portrait = window.innerHeight >= window.innerWidth;
+      const long = Math.max(window.screen.width, window.screen.height);
+      const short = Math.min(window.screen.width, window.screen.height);
+      const screenH = portrait ? long : short;
+      root.style.setProperty("--app-h", `${Math.max(window.innerHeight, screenH)}px`);
+    };
+    apply();
+    window.addEventListener("resize", apply);
+    window.addEventListener("orientationchange", apply);
+    return () => {
+      window.removeEventListener("resize", apply);
+      window.removeEventListener("orientationchange", apply);
+    };
+  }, []);
+
   // Service worker registration.
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
