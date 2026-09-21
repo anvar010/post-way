@@ -33,6 +33,11 @@ export const metadata = {
     statusBarStyle: "black-translucent",
     title: "Post-Way",
   },
+  // Next only emits the unprefixed mobile-web-app-capable tag; iOS needs the
+  // apple- one to run full-screen and extend under the home-indicator area.
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
   icons: {
     icon: "/icons/favicon-32.png",
     apple: "/icons/apple-touch-icon.png",
