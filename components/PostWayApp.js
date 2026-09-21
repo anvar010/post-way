@@ -88,40 +88,6 @@ export default function PostWayApp() {
     }
   }, [geo.status]);
 
-  // TEMP diagnostics for the installed-app bottom gap. Remove once fixed.
-  const [debugText, setDebugText] = useState("");
-  useEffect(() => {
-    const probe = document.createElement("div");
-    probe.style.cssText =
-      "position:fixed;left:0;bottom:0;width:1px;height:1px;visibility:hidden;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)";
-    document.body.appendChild(probe);
-    const measure = () => {
-      const cs = getComputedStyle(probe);
-      const vv = window.visualViewport;
-      const app = document.getElementById("app")?.getBoundingClientRect();
-      const nav = document.querySelector(".bottom-nav")?.getBoundingClientRect();
-      const r = (n) => (n == null ? "-" : Math.round(n));
-      setDebugText(
-        [
-          `inner ${r(window.innerWidth)}x${r(window.innerHeight)}`,
-          `screen ${r(screen.width)}x${r(screen.height)}`,
-          `vv ${r(vv?.width)}x${r(vv?.height)} top ${r(vv?.offsetTop)}`,
-          `clientH ${r(document.documentElement.clientHeight)}`,
-          `safe t ${cs.paddingTop} b ${cs.paddingBottom}`,
-          `fixed-bottom probe ${r(probe.getBoundingClientRect().bottom)}`,
-          `app ${r(app?.top)}-${r(app?.bottom)} nav ${r(nav?.top)}-${r(nav?.bottom)}`,
-          `standalone ${String(window.navigator.standalone)}`,
-        ].join("\n")
-      );
-    };
-    measure();
-    const id = setInterval(measure, 1000);
-    return () => {
-      clearInterval(id);
-      probe.remove();
-    };
-  }, []);
-
   // Service worker registration.
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -224,7 +190,6 @@ export default function PostWayApp() {
 
   return (
     <div id="app">
-      <pre style={{ position: "fixed", top: "58%", left: 8, right: 8, zIndex: 9999, margin: 0, padding: 6, font: "11px/1.35 monospace", background: "rgba(255,255,0,0.85)", color: "#000", pointerEvents: "none", whiteSpace: "pre-wrap" }}>{debugText}</pre>
       <section className={`view view-home${view === "home" ? " active" : ""}`} aria-label="Home">
         <HomeView
           geo={geo}
