@@ -105,7 +105,6 @@ a:focus-visible {
   left: 0;
   right: 0;
   width: 100%;
-  height: var(--app-h, auto);
   max-width: 560px;
   margin: 0 auto;
   background: var(--paper);
