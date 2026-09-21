@@ -90,11 +90,17 @@ export default function PostWayApp() {
 
   // Service worker registration.
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/service-worker.js").catch(() => {});
-      });
+    if (!("serviceWorker" in navigator)) return;
+    const register = () => {
+      navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+    };
+    // This effect runs after hydration, so "load" has often already fired.
+    if (document.readyState === "complete") {
+      register();
+      return;
     }
+    window.addEventListener("load", register);
+    return () => window.removeEventListener("load", register);
   }, []);
 
   // PWA install prompt.
