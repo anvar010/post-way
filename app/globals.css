@@ -676,6 +676,16 @@ a:focus-visible {
   gap: 4px;
   z-index: 10;
 }
+.nav-indicator {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--pine);
+  transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+  pointer-events: none;
+  z-index: 0;
+}
+.nav-indicator--instant { transition: none; }
 .nav-item {
   position: relative;
   flex: 1 1 0;
@@ -684,17 +694,19 @@ a:focus-visible {
   gap: 3px;
   color: var(--muted);
   transition: color 0.15s ease;
+  z-index: 1;
 }
 .nav-item-icon {
   position: relative;
+  flex-shrink: 0;
   width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 50%;
-  transition: background 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: color 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .nav-item span { font-size: 10.5px; font-weight: 600; transition: color 0.15s ease; }
 .nav-item.active { color: var(--pine); }
-.nav-item.active .nav-item-icon { background: var(--pine); color: #fff; transform: translateY(-1px); }
+.nav-item.active .nav-item-icon { color: #fff; transform: translateY(-1px); }
 .nav-item:active .nav-item-icon { transform: scale(0.88); }
 
 /* ==========================================================================
