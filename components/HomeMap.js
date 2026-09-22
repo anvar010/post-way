@@ -14,9 +14,9 @@ export default function HomeMap({ position, pins, onPinClick, recenterToken, pic
   useEffect(() => {
     if (mapRef.current || !elRef.current) return;
     const map = L.map(elRef.current, { zoomControl: false }).setView(DEFAULT_CENTER, 15);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 19,
-      attribution: "&copy; OpenStreetMap",
+      attribution: "Tiles &copy; Esri",
     }).addTo(map);
     L.control.zoom({ position: "bottomleft" }).addTo(map);
     mapRef.current = map;

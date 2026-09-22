@@ -17,7 +17,7 @@ export default function PreviewMap({ lat, lng, color = "#8E1F2B", className = "m
       scrollWheelZoom: false,
       tap: true,
     }).setView(DEFAULT_CENTER, 16);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 }).addTo(map);
     mapRef.current = map;
 
     const ro = new ResizeObserver(() => map.invalidateSize());
