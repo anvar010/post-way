@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { fmtCoord, formatSavedDate, formatDistance } from "@/lib/format";
 import { getCategory } from "@/lib/categories";
-import { buildDirectionsUrl, shareLocation } from "@/lib/directions";
+import { buildDirectionsUrl, buildStreetViewUrl, shareLocation } from "@/lib/directions";
 import CategoryIcon from "./CategoryIcon";
 
 const PreviewMap = dynamic(() => import("./PreviewMap"), { ssr: false });
@@ -31,6 +31,20 @@ export default function DetailSheet({ location, navApp, onClose, onEdit, onDelet
               <svg viewBox="0 0 24 24" width="17" height="17">
                 <path
                   d="M18 8a3 3 0 1 0-2.83-4H15a3 3 0 0 0 .05 2.24l-6.02 3.5a3 3 0 1 0 0 4.52l6.02 3.5A3 3 0 1 0 15.9 16l-6.02-3.5a3 3 0 0 0 0-1l6.02-3.5A3 3 0 0 0 18 8z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+            <button
+              className="icon-btn"
+              type="button"
+              aria-label="View Street View"
+              onClick={() => window.open(buildStreetViewUrl(location), "_blank", "noopener")}
+            >
+              <svg viewBox="0 0 24 24" width="17" height="17">
+                <circle cx="12" cy="6.5" r="2.5" fill="currentColor" />
+                <path
+                  d="M12 9c-2.5 0-4.5 1.6-4.9 3.8-.1.6.4 1.2 1 1.2h1.2l.5 6.4c0 .9 1 1.6 2.2 1.6s2.2-.7 2.2-1.6l.5-6.4h1.2c.6 0 1.1-.6 1-1.2C16.5 10.6 14.5 9 12 9z"
                   fill="currentColor"
                 />
               </svg>
