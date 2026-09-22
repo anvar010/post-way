@@ -57,8 +57,12 @@ export default function HomeMap({ position, pins, onPinClick, recenterToken, pic
       const latlng = [pin.lat, pin.lng];
       if (existing) {
         existing.setLatLng(latlng);
+        if (pin.name) existing.setTooltipContent(pin.name);
       } else {
         const marker = L.marker(latlng, { icon: pinIcon(pin.color) });
+        if (pin.name) {
+          marker.bindTooltip(pin.name, { permanent: true, direction: "top", className: "wp-pin-label" });
+        }
         marker.on("click", () => onPinClick && onPinClick(pin.id));
         marker.addTo(map);
         pinMarkersRef.current.set(pin.id, marker);

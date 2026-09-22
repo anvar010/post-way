@@ -10,7 +10,7 @@ const HomeMap = dynamic(() => import("./HomeMap"), { ssr: false });
 export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, recenterToken, onPickSpot }) {
   const [picking, setPicking] = useState(false);
   const [pickToken, setPickToken] = useState(0);
-  const mapPins = pins.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, color: getCategory(p.category).color }));
+  const mapPins = pins.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, color: getCategory(p.category).color, name: p.name }));
   const status = geo.status;
 
   return (
