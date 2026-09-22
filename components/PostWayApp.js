@@ -227,6 +227,7 @@ export default function PostWayApp() {
           onQuickDirections={(loc) => {
             window.open(buildDirectionsUrl(loc, prefs.navApp), "_blank", "noopener");
           }}
+          onDeleteRequest={(id) => setDeleteTargetId(id)}
           onSaveCurrent={openSaveSheet}
         />
       </section>

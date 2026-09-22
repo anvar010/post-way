@@ -22,6 +22,7 @@ export default function SavedView({
   hasPosition,
   onOpenDetail,
   onQuickDirections,
+  onDeleteRequest,
   onSaveCurrent,
 }) {
   const filtered = useMemo(() => {
@@ -166,19 +167,42 @@ export default function SavedView({
                     {dist && <span className="loc-card-distance"> · {dist}</span>}
                   </span>
                 </span>
-                <span
-                  className="loc-card-directions"
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Get directions to ${loc.name}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onQuickDirections(loc);
-                  }}
-                >
-                  <svg viewBox="0 0 24 24" width="17" height="17">
-                    <path d="M21 12 3 4l3.5 8L3 20l18-8z" fill="currentColor" />
-                  </svg>
+                <span className="loc-card-actions">
+                  <span
+                    className="loc-card-directions"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Get directions to ${loc.name}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onQuickDirections(loc);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" width="17" height="17">
+                      <path d="M21 12 3 4l3.5 8L3 20l18-8z" fill="currentColor" />
+                    </svg>
+                  </span>
+                  <span
+                    className="loc-card-delete"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Delete ${loc.name}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteRequest(loc.id);
+                    }}
+                  >
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                      <path
+                        d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0-1 13a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1L6 7h12z"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                 </span>
               </button>
             );
