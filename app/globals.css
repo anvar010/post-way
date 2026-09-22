@@ -201,6 +201,13 @@ a:focus-visible {
   background: var(--surface-sunken);
 }
 .map-canvas { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; }
+.map-wrap--expanded {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  border-radius: 0;
+  z-index: 20;
+}
 .map-skeleton {
   position: absolute; inset: 0; z-index: 2;
   background: linear-gradient(100deg, var(--surface-sunken) 30%, #E3E9E5 45%, var(--surface-sunken) 60%);
@@ -223,6 +230,21 @@ a:focus-visible {
   box-shadow: var(--shadow-fab);
 }
 .map-fab:active { transform: scale(0.94); }
+.map-fab--expand { right: auto; left: 12px; }
+.map-wrap--expanded .map-fab {
+  top: calc(12px + var(--safe-t));
+  bottom: auto;
+}
+
+.map-expanded-actions {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 3;
+  padding: 12px 16px calc(12px + var(--safe-b));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .sheet-fixed {
   flex-shrink: 0;

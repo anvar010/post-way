@@ -10,6 +10,7 @@ const HomeMap = dynamic(() => import("./HomeMap"), { ssr: false });
 export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, recenterToken, onPickSpot }) {
   const [picking, setPicking] = useState(false);
   const [pickToken, setPickToken] = useState(0);
+  const [expanded, setExpanded] = useState(false);
   const mapPins = pins.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, color: getCategory(p.category).color, name: p.name }));
   const status = geo.status;
 
@@ -36,7 +37,7 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
         </div>
       </header>
 
-      <div className="map-wrap">
+      <div className={`map-wrap${expanded ? " map-wrap--expanded" : ""}`}>
         <HomeMap
           position={geo.position}
           pins={mapPins}
@@ -57,6 +58,22 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
           </div>
         )}
         {status === "loading" && <div className="map-skeleton" />}
+        <button
+          className="map-fab map-fab--expand"
+          type="button"
+          aria-label={expanded ? "Exit full screen map" : "Expand map to full screen"}
+          onClick={() => setExpanded((e) => !e)}
+        >
+          {expanded ? (
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3" />
+            </svg>
+          )}
+        </button>
         <button className="map-fab" type="button" aria-label="Recenter map on my location" onClick={onRecenter}>
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none" />
@@ -64,6 +81,48 @@ export default function HomeView({ geo, pins, onPinClick, onSave, onRecenter, re
             <path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5" />
           </svg>
         </button>
+        {expanded && (
+          <div className="map-expanded-actions">
+            {picking ? (
+              <>
+                <div className="location-card pick-hint">
+                  <div className="lc-copy">
+                    <p className="lc-title">Move the map to place the pin</p>
+                    <p className="lc-sub">Zoom in for an exact spot, then tap Use this spot.</p>
+                  </div>
+                </div>
+                <div className="pick-actions">
+                  <button className="btn btn--outline" type="button" onClick={() => setPicking(false)}>
+                    Cancel
+                  </button>
+                  <button className="btn btn--primary btn--pick" type="button" onClick={() => setPickToken((t) => t + 1)}>
+                    Use this spot
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <button className="btn btn--primary btn--save" type="button" disabled={status !== "ready"} onClick={onSave}>
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path
+                      d="M12 2c-3.9 0-7 3.1-7 7 0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  Save This Location
+                </button>
+                <button className="btn btn--outline btn--custom" type="button" onClick={() => setPicking(true)}>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                    <circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none" />
+                    <circle cx="12" cy="12" r="7.2" />
+                    <path d="M12 2.5v2.6M12 18.9v2.6M21.5 12h-2.6M5.1 12H2.5" />
+                  </svg>
+                  Pin a different spot
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {picking ? (
