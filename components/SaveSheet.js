@@ -6,6 +6,7 @@ import { fmtCoord } from "@/lib/format";
 import { compressImageFile } from "@/lib/image";
 import { getCategory } from "@/lib/categories";
 import CategoryPicker from "./CategoryPicker";
+import MembersField from "./MembersField";
 
 const PreviewMap = dynamic(() => import("./PreviewMap"), { ssr: false });
 
@@ -17,6 +18,8 @@ function maybeRequestNotificationPermission() {
 
 export default function SaveSheet({ open, position, address, onClose, onSave }) {
   const [name, setName] = useState("");
+  const [members, setMembers] = useState([""]);
+  const [mobile, setMobile] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("general");
   const [photo, setPhoto] = useState(null);
@@ -27,6 +30,8 @@ export default function SaveSheet({ open, position, address, onClose, onSave }) 
   useEffect(() => {
     if (open) {
       setName("");
+      setMembers([""]);
+      setMobile("");
       setDescription("");
       setCategory("general");
       setPhoto(null);
@@ -57,6 +62,8 @@ export default function SaveSheet({ open, position, address, onClose, onSave }) 
     if (!name.trim() || !position) return;
     onSave({
       name: name.trim(),
+      members: members.map((m) => m.trim()).filter(Boolean),
+      mobile: mobile.trim(),
       description: description.trim(),
       category,
       photo,
@@ -101,7 +108,7 @@ export default function SaveSheet({ open, position, address, onClose, onSave }) 
           <form id="save-form" className="form" onSubmit={handleSubmit}>
             <label className="field">
               <span className="field-label">
-                Location name <span className="req">*</span>
+                House name <span className="req">*</span>
               </span>
               <input
                 ref={nameInputRef}
@@ -112,6 +119,20 @@ export default function SaveSheet({ open, position, address, onClose, onSave }) 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
+            </label>
+
+            <div className="field">
+              <span className="field-label">
+                Members <span className="opt">optional</span>
+              </span>
+              <MembersField members={members} onChange={setMembers} />
+            </div>
+
+            <label className="field">
+              <span className="field-label">
+                Mobile number <span className="opt">optional</span>
+              </span>
+              <input type="tel" placeholder="e.g. +1 555 123 4567" value={mobile} onChange={(e) => setMobile(e.target.value)} />
             </label>
 
             <div className="field">

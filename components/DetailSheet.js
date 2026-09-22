@@ -114,6 +114,22 @@ export default function DetailSheet({ location, navApp, onClose, onEdit, onDelet
             </span>
           </div>
 
+          {(location.members?.length > 0 || location.mobile) && (
+            <div className="detail-row">
+              <svg viewBox="0 0 24 24" width="18" height="18" className="detail-row-icon">
+                <path
+                  d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span>
+                {location.members?.length > 0 && location.members.join(", ")}
+                {location.members?.length > 0 && location.mobile && " · "}
+                {location.mobile && <a href={`tel:${location.mobile}`}>{location.mobile}</a>}
+              </span>
+            </div>
+          )}
+
           {location.reminderAt && (
             <div className="detail-row detail-row--muted">
               <svg viewBox="0 0 24 24" width="16" height="16" className="detail-row-icon">

@@ -805,6 +805,18 @@ a:focus-visible {
 .field input:focus, .field textarea:focus { border-color: var(--pine); }
 .field input::placeholder, .field textarea::placeholder { color: var(--muted-2); }
 
+.members-field { display: flex; flex-direction: column; gap: 8px; }
+.member-row { display: flex; align-items: center; gap: 8px; }
+.member-row input { flex: 1 1 auto; min-width: 0; }
+.member-add-btn {
+  width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--pine-soft);
+  color: var(--pine);
+}
+.member-add-btn:active { transform: scale(0.92); }
+
 /* dialog */
 .overlay--dialog { align-items: center; padding: 20px; }
 .dialog {

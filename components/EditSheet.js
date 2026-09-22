@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { compressImageFile } from "@/lib/image";
 import { getCategory } from "@/lib/categories";
 import CategoryPicker from "./CategoryPicker";
+import MembersField from "./MembersField";
 
 const PreviewMap = dynamic(() => import("./PreviewMap"), { ssr: false });
 
@@ -17,6 +18,8 @@ function toLocalInputValue(iso) {
 
 export default function EditSheet({ open, location, onClose, onSave }) {
   const [name, setName] = useState("");
+  const [members, setMembers] = useState([""]);
+  const [mobile, setMobile] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("general");
   const [photo, setPhoto] = useState(null);
@@ -26,6 +29,8 @@ export default function EditSheet({ open, location, onClose, onSave }) {
   useEffect(() => {
     if (open && location) {
       setName(location.name);
+      setMembers(location.members?.length ? location.members : [""]);
+      setMobile(location.mobile || "");
       setDescription(location.description || "");
       setCategory(location.category || "general");
       setPhoto(location.photo || null);
@@ -54,6 +59,8 @@ export default function EditSheet({ open, location, onClose, onSave }) {
     if (!name.trim()) return;
     onSave({
       name: name.trim(),
+      members: members.map((m) => m.trim()).filter(Boolean),
+      mobile: mobile.trim(),
       description: description.trim(),
       category,
       photo,
@@ -81,9 +88,23 @@ export default function EditSheet({ open, location, onClose, onSave }) {
           <form id="edit-form" className="form" onSubmit={handleSubmit}>
             <label className="field">
               <span className="field-label">
-                Location name <span className="req">*</span>
+                House name <span className="req">*</span>
               </span>
               <input type="text" maxLength={60} required value={name} onChange={(e) => setName(e.target.value)} />
+            </label>
+
+            <div className="field">
+              <span className="field-label">
+                Members <span className="opt">optional</span>
+              </span>
+              <MembersField members={members} onChange={setMembers} />
+            </div>
+
+            <label className="field">
+              <span className="field-label">
+                Mobile number <span className="opt">optional</span>
+              </span>
+              <input type="tel" placeholder="e.g. +1 555 123 4567" value={mobile} onChange={(e) => setMobile(e.target.value)} />
             </label>
 
             <div className="field">
